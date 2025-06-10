@@ -1,5 +1,8 @@
 import { log } from "console";
 import React from "react";
+import ProductCard from "./product-card";
+
+//import { Product } from "@/types";
 
 function ProductList({
   data,
@@ -17,7 +20,7 @@ function ProductList({
       {data.length > 0 ? (
         <div className="grid gap-4 grid-col-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {limitedData.map((product: any) => (
-            <div>{product.name}</div>
+            <ProductCard key={product.slug} product={product} />
           ))}
         </div>
       ) : (
