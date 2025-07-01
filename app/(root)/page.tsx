@@ -1,8 +1,6 @@
-import sampleData from "@/db/sample-data";
+//import sampleData from "@/db/sample-data";
 import ProductList from "@/components/shared/product/product-list";
-
 import { getLatestProducts } from "@/lib/actions/product.actions";
-import { log } from "console";
 
 export default async function Home() {
   const laestProduct = await getLatestProducts();
