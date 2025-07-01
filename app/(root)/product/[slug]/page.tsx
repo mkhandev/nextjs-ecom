@@ -3,19 +3,26 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { getProductBySlug } from "@/lib/actions/product.actions";
 import { Button } from "@/components/ui/button";
+import { notFound } from "next/navigation";
+import ProductImages from "@/components/shared/product/product-images";
 
-async function ProductDetailsPage({ params }) {
-  const { slug } = params;
+const ProductDetailsPage = async (props: {
+  params: Promise<{ slug: string }>;
+}) => {
+  const { slug } = await props.params;
+
   const product = await getProductBySlug(slug);
 
-  console.log("Product details:", product);
+  if (!product) notFound();
 
   return (
     <>
       <section>
         <div className="grid grid-cols-1 md:grid-cols-5">
           {/* Images Column */}
-          <div className="col-span-2"></div>
+          <div className="col-span-2">
+            <ProductImages images={product.images} />
+          </div>
           {/* Details Column */}
           <div className="col-span-2 p-5">
             <div className="flex flex-col gap-6">
@@ -24,7 +31,7 @@ async function ProductDetailsPage({ params }) {
               </p>
               <h1 className="h3-bold">{product.name}</h1>
               <p>
-                {product.rating} of {product?.numReviews}
+                {Number(product.rating)} of {product?.numReviews}
               </p>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <ProductPrice
@@ -70,6 +77,6 @@ async function ProductDetailsPage({ params }) {
       </section>
     </>
   );
-}
+};
 
 export default ProductDetailsPage;

@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/db/prisma";
+//import { prisma } from "@/db/prisma";
 
 import { PrismaClient } from "@prisma/client";
 
