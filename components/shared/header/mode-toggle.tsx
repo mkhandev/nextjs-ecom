@@ -14,7 +14,7 @@ import { SunIcon, MoonIcon, SunMoon } from "lucide-react";
 
 function ModeToggle() {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);

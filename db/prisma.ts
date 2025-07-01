@@ -44,6 +44,6 @@ const prismaClient = new PrismaClient({ adapter }).$extends({
 
 export const prisma = globalForPrisma.prisma ?? prismaClient;
 
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
+// if (process.env.NODE_ENV !== "production") {
+//   globalForPrisma.prisma = prisma;
+// }
