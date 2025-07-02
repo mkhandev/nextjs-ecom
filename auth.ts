@@ -69,4 +69,4 @@ export const config: NextAuthOptions = {
   },
 };
 
-export const { handlers, auth, signIn, signOut } = NextAuth(config);
+//export const { handlers, auth, signIn, signOut } = NextAuth(config);
