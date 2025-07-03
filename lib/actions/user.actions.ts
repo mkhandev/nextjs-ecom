@@ -1,3 +1,5 @@
+"use client";
+
 import { signInFormSchema } from "../validators";
 import { signIn, signOut } from "next-auth/react";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
