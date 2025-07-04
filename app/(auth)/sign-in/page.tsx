@@ -16,15 +16,14 @@ import Link from "next/link";
 import { APP_NAME } from "@/lib/constants";
 import CredentialsSigninForm from "./credentials-signin-form";
 
-import { config } from "@/auth";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
 const SignInPage = async (props: {
   searchParams: Promise<{ callbackUrl: string }>;
 }) => {
   const { callbackUrl } = await props.searchParams;
-  const session = await getServerSession(config);
+  const session = await auth();
   if (session) {
     return redirect(callbackUrl || "/");
   }

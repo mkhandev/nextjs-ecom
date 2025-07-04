@@ -15,8 +15,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { APP_NAME } from "@/lib/constants";
 
-import { config } from "@/auth";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
 import SignUpForm from "./sign-up-form";
@@ -25,7 +24,7 @@ const SignUpPage = async (props: {
   searchParams: Promise<{ callbackUrl: string }>;
 }) => {
   const { callbackUrl } = await props.searchParams;
-  const session = await getServerSession(config);
+  const session = await auth();
   if (session) {
     return redirect(callbackUrl || "/");
   }

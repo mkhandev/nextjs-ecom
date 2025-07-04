@@ -1,12 +1,14 @@
+"use server";
+
 import { hashSync } from "bcrypt-ts-edge";
 
 import { PrismaClient } from "@prisma/client";
 
 import { signInFormSchema, signUpFormSchema } from "../validators";
-import { signIn, signOut } from "next-auth/react";
+import { signIn, signOut } from "@/auth";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 
-export const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
 export async function signInWithCredentials(
   prevState: unknown,

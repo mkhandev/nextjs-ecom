@@ -10,11 +10,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { UserIcon } from "lucide-react";
 
-import { config } from "@/auth";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 
 const UserButton = async () => {
-  const session = await getServerSession(config);
+  const session = await auth();
 
   if (!session) {
     return (
