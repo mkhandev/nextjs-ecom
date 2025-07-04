@@ -1,16 +1,15 @@
-import NextAuth, { type NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compareSync } from "bcrypt-ts-edge";
 import { PrismaClient } from "@prisma/client";
-//import { compare } from "bcrypt-ts-edge";
-//import { prisma } from "./db/prisma";
+
 export const prisma = new PrismaClient();
 
-export const config: NextAuthOptions = {
+export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: "/sign-in",
-    signOut: "/signout",
+    signOut: "/sign-out",
     error: "/auth/error", // Error code passed in query string as ?error=
   },
   session: {
@@ -59,41 +58,6 @@ export const config: NextAuthOptions = {
         return null;
       },
     }),
-    /*
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-          select: {
-            id: true,
-            email: true,
-            name: true,
-            password: true, // ✅ this is the actual hashed password
-          },
-        });
-
-        if (!user || !user.password) {
-          console.log("User or password not found");
-          return null;
-        }
-
-        const isValid = await compare(credentials.password, user.password);
-        if (!isValid) {
-          console.log("Invalid password");
-          return null;
-        }
-
-        console.log(user);
-
-        return { id: user.id, email: user.email, name: user.name };
-      },
-    }),
-    */
   ],
   callbacks: {
     async session({ session, user, trigger, token }: any) {
@@ -110,6 +74,4 @@ export const config: NextAuthOptions = {
       return session;
     },
   },
-};
-
-//export const { handlers, auth, signIn, signOut } = NextAuth(config);
+});

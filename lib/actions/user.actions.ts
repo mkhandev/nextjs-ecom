@@ -1,8 +1,14 @@
-"use client";
+"use server";
 
-import { signInFormSchema } from "../validators";
-import { signIn, signOut } from "next-auth/react";
+import { hashSync } from "bcrypt-ts-edge";
+
+import { PrismaClient } from "@prisma/client";
+
+import { signInFormSchema, signUpFormSchema } from "../validators";
+import { signIn, signOut } from "@/auth";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
+
+const prisma = new PrismaClient();
 
 export async function signInWithCredentials(
   prevState: unknown,
@@ -17,21 +23,6 @@ export async function signInWithCredentials(
     await signIn("credentials", user);
 
     return { success: true, message: "Signed in successfully" };
-
-    // const res = await signIn("credentials", {
-    //   ...user,
-    //   redirect: false,
-    // });
-
-    // console.log("signIn result:", res);
-
-    // if (res?.ok) {
-    //   alert("Successfully signed in");
-    // } else {
-    //   alert("Invalid login");
-    // }
-
-    //return { success: true, message: "Successfully login" };
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
@@ -43,4 +34,41 @@ export async function signInWithCredentials(
 
 export async function signOutUser() {
   await signOut();
+}
+
+export async function signUpUser(prevState: unknown, formData: FormData) {
+  try {
+    const user = signUpFormSchema.parse({
+      name: formData.get("name"),
+      email: formData.get("email"),
+      password: formData.get("password"),
+      confirmPassword: formData.get("confirmPassword"),
+    });
+
+    const plainPassword = user.password;
+    const hashedPassword = hashSync(user.password);
+
+    await prisma.user.create({
+      data: {
+        name: user.name,
+        email: user.email,
+        password: hashedPassword,
+      },
+    });
+
+    await signIn("credentials", {
+      email: user.email,
+      password: plainPassword,
+    });
+
+    return { success: true, message: "User registered successfully" };
+  } catch (error) {
+    console.log(error);
+
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
+    return { success: false, message: "User was not registered." };
+  }
 }
