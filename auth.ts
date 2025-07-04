@@ -10,7 +10,7 @@ export const prisma = new PrismaClient();
 export const config: NextAuthOptions = {
   pages: {
     signIn: "/sign-in",
-    signOut: "/signout",
+    signOut: "/sign-out",
     error: "/auth/error", // Error code passed in query string as ?error=
   },
   session: {

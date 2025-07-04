@@ -56,7 +56,7 @@ const UserButton = async () => {
           <DropdownMenuItem className="p-0 mb-1">
             <form action={signOutUser} className="w-full">
               <Button
-                className="justify-start w-full h-4 px-2 py-4"
+                className="justify-start w-full h-4 px-2 py-4 cursor-pointer"
                 variant="ghost"
               >
                 Sign Out
