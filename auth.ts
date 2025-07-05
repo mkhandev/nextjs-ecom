@@ -3,6 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compareSync } from "bcrypt-ts-edge";
 import { PrismaClient } from "@prisma/client";
+import { NextResponse } from "next/server";
 
 export const prisma = new PrismaClient();
 
@@ -68,8 +69,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (trigger === "update") {
         session.user.name = user.name;
       }
-
-      console.log(session);
 
       return session;
     },
