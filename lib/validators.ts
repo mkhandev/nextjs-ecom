@@ -1,12 +1,22 @@
 import { z } from "zod";
-import { formatNumberWithDecimal } from "./utils";
+//import { formatNumberWithDecimal } from "./utils";
 
-const currency = z
-  .string()
-  .refine(
-    (value) => /^\d+(\.\d{2})?$/.test(formatNumberWithDecimal(Number(value))),
-    "Price must have exactly two decimal places"
-  );
+// const currency = z
+//   .number()
+//   .refine(
+//     (value) => /^\d+(\.\d{2})?$/.test(formatNumberWithDecimal(Number(value))),
+//     "Price must have exactly two decimal places"
+//   );
+
+const currency = z.union([
+  z.number().transform((val) => val.toFixed(2)),
+  z
+    .string()
+    .refine(
+      (val) => /^\d+(\.\d{2})?$/.test(val),
+      "Price must be a string with exactly two decimal places"
+    ),
+]);
 
 export const insertProductSchema = z.object({
   name: z.string().min(3, "Name is required"),
