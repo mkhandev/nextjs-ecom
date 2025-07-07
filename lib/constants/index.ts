@@ -20,3 +20,11 @@ export const signUpDefaultValues = {
   password: "123456",
   confirmPassword: "123456",
 };
+
+export const shippingAddressDefaultValues = {
+  fullName: "Abdullah Al Mahmud",
+  streetAddress: "123 Main st",
+  city: "Dhaka",
+  postalCode: "1216",
+  country: "Bangladesh",
+};
