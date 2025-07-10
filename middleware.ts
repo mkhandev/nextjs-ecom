@@ -21,27 +21,27 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  const protectedPaths = [
-    /^\/shipping-address/,
-    /^\/payment-method/,
-    /^\/place-order/,
-    /^\/profile/,
-    /^\/user\/(.*)/,
-    /^\/order\/(.*)/,
-    /^\/admin/,
-  ];
+  // const protectedPaths = [
+  //   /^\/shipping-address/,
+  //   /^\/payment-method/,
+  //   /^\/place-order/,
+  //   /^\/profile/,
+  //   /^\/user\/(.*)/,
+  //   /^\/order\/(.*)/,
+  //   /^\/admin/,
+  // ];
 
-  const isProtected = protectedPaths.some((regex) => regex.test(pathname));
+  // const isProtected = protectedPaths.some((regex) => regex.test(pathname));
 
-  if (isProtected) {
-    const sessionToken =
-      request.cookies.get("authjs.session-token")?.value ||
-      request.cookies.get("__Secure-next-auth.session-token")?.value;
+  // if (isProtected) {
+  //   const sessionToken =
+  //     request.cookies.get("authjs.session-token")?.value ||
+  //     request.cookies.get("__Secure-next-auth.session-token")?.value;
 
-    if (!sessionToken) {
-      return NextResponse.redirect(new URL("/sign-in", request.url));
-    }
-  }
+  //   if (!sessionToken) {
+  //     return NextResponse.redirect(new URL("/sign-in", request.url));
+  //   }
+  // }
 
   return NextResponse.next();
 }
