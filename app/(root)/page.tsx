@@ -14,6 +14,8 @@ export default async function Home() {
 
   return (
     <>
+      <h1>User id: {userId}</h1>
+
       <ProductList data={laestProduct} limit={4} title="Newest Arrivals" />
     </>
   );
