@@ -72,8 +72,6 @@ export const AddItemToCart = async (data: CartItem) => {
         (x) => x.productId === item.productId
       );
 
-      console.log(existItem);
-
       if (existItem) {
         if (product.stock < existItem.qty + 1) {
           throw new Error("Not enough stock");
