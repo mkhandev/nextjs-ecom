@@ -1,7 +1,3 @@
-import { Metadata } from "next";
-import { getMyOrders } from "@/lib/actions/order.actions";
-import { formatCurrency, formatDateTime, formatId } from "@/lib/utils";
-import Link from "next/link";
 import {
   Table,
   TableBody,
@@ -10,22 +6,32 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Pagination from "@/components/shared/pagination";
+import { deleteOrder, getAllOrders } from "@/lib/actions/order.actions";
+import { formatCurrency, formatDateTime, formatId } from "@/lib/utils";
+import { Metadata } from "next";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import Pagination from "@/components/shared/pagination";
+import { requireAdmin } from "@/lib/auth-guard";
+import DeleteDialog from "@/components/shared/delete-dialog";
 
 export const metadata: Metadata = {
-  title: "My Orders",
+  title: "Admin Orders",
 };
 
-const OrdersPage = async (props: {
-  searchParams: Promise<{ page: string }>;
+const AdminOrdersPage = async (props: {
+  searchParams: Promise<{ page: string; query: string }>;
 }) => {
-  const { page } = await props.searchParams;
+  const { page = "1" /*query: searchText*/ } = await props.searchParams;
 
-  const orders = await getMyOrders({
-    page: Number(page) || 1,
+  await requireAdmin();
+
+  const orders = await getAllOrders({
+    page: Number(page),
+    //query: searchText,
   });
 
+  console.log(orders);
   return (
     <div className="space-y-2">
       <h2 className="h2-bold">Orders</h2>
@@ -65,6 +71,7 @@ const OrdersPage = async (props: {
                   <Button asChild variant="outline" size="sm">
                     <Link href={`/order/${order.id}`}>Details</Link>
                   </Button>
+                  <DeleteDialog id={order.id} action={deleteOrder} />
                 </TableCell>
               </TableRow>
             ))}
@@ -79,4 +86,4 @@ const OrdersPage = async (props: {
   );
 };
 
-export default OrdersPage;
+export default AdminOrdersPage;

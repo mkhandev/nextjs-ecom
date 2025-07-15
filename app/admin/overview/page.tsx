@@ -12,7 +12,7 @@ import { formatCurrency, formatDateTime, formatNumber } from "@/lib/utils";
 import { BadgeDollarSign, Barcode, CreditCard, Users } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
-import { getOrderSummary } from "@/lib/actions/order.action";
+import { getOrderSummary } from "@/lib/actions/order.actions";
 import Charts from "./chart";
 import { requireAdmin } from "@/lib/auth-guard";
 
