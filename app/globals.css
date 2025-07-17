@@ -149,3 +149,12 @@
     @apply font-bold text-xl lg:text-2xl;
   }
 }
+
+/* Uploadthing button text override */
+html.dark .upload-field .text-white {
+  color: #ffffff !important;
+}
+
+.upload-field .text-white {
+  color: #000 !important;
+}

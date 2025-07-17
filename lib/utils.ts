@@ -126,15 +126,6 @@ export function formUrlQuery({
   key: string;
   value: string | null;
 }) {
-  console.log(
-    "formUrlQuery called with params:",
-    params,
-    "key:",
-    key,
-    "value:",
-    value
-  );
-
   const query = qs.parse(params);
   query[key] = value;
 
