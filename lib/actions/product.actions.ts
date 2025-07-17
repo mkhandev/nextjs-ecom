@@ -34,15 +34,15 @@ export async function getProductBySlug(slug: string) {
 }
 
 export async function getAllProducts({
-  query,
+  //query,
   page,
   limit = PAGE_SIZE,
-  category,
-}: {
-  query: string;
+}: //category,
+{
+  //query: string;
   page: number;
   limit?: number;
-  category?: string;
+  //category?: string;
 }) {
   const data = await prisma.product.findMany({
     orderBy: { createdAt: "desc" },

@@ -35,11 +35,14 @@ const ProductForm = ({
   product?: Product;
   productId?: string;
 }) => {
-  const form = useForm<z.infer<typeof insertProductSchema>>({
-    resolver:
-      type === "Update"
-        ? zodResolver(updateProductSchema)
-        : zodResolver(insertProductSchema),
+  type FormSchemaType = typeof type extends "Update"
+    ? z.infer<typeof updateProductSchema>
+    : z.infer<typeof insertProductSchema>;
+
+  const form = useForm<FormSchemaType>({
+    resolver: zodResolver(
+      type === "Update" ? updateProductSchema : insertProductSchema
+    ),
     defaultValues:
       product && type === "Update" ? product : productDefaultValues,
   });
