@@ -4,7 +4,7 @@ import { PAGE_SIZE } from "./../constants/index";
 import { PrismaClient } from "@prisma/client";
 //import { convertToPlainObject } from "../utils";
 import { LATEST_PRODUCTS_LIMIT } from "../constants";
-import { formatError } from "../utils";
+import { convertToPlainObject, formatError } from "../utils";
 import { revalidatePath } from "next/cache";
 import { insertProductSchema, updateProductSchema } from "../validators";
 import z from "zod";
@@ -123,4 +123,13 @@ export async function updateProduct(data: z.infer<typeof updateProductSchema>) {
   } catch (error) {
     return { success: false, message: formatError(error) };
   }
+}
+
+// Get single product by it's ID
+export async function getProductById(productId: string) {
+  const data = await prisma.product.findFirst({
+    where: { id: productId },
+  });
+
+  return convertToPlainObject(data);
 }

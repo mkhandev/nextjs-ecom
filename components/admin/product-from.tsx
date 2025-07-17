@@ -24,6 +24,7 @@ import { Textarea } from "../ui/textarea";
 import { createProduct, updateProduct } from "@/lib/actions/product.actions";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { UploadButton } from "@/lib/uploadthing";
 
 const ProductForm = ({
   type,
@@ -248,7 +249,27 @@ const ProductForm = ({
                 <Card>
                   <CardContent className="mt-2 space-y-2 min-h-48">
                     <div className="space-x-2 flex-start">
-                      <FormControl></FormControl>
+                      {images.map((image: string) => (
+                        <Image
+                          key={image}
+                          src={image}
+                          alt="product image"
+                          className="object-cover object-center w-20 h-20 rounded-sm"
+                          width={100}
+                          height={100}
+                        />
+                      ))}
+                      <FormControl>
+                        <UploadButton
+                          endpoint="imageUploader"
+                          onClientUploadComplete={(res: { url: string }[]) => {
+                            form.setValue("images", [...images, res[0].url]);
+                          }}
+                          onUploadError={(error: Error) => {
+                            toast.error(error.message);
+                          }}
+                        />
+                      </FormControl>
                     </div>
                   </CardContent>
                 </Card>
@@ -289,9 +310,15 @@ const ProductForm = ({
               )}
 
               {isFeatured && !banner && (
-                <div>
-                  <h1>Upload Button</h1>
-                </div>
+                <UploadButton
+                  endpoint="imageUploader"
+                  onClientUploadComplete={(res: { url: string }[]) => {
+                    form.setValue("banner", res[0].url);
+                  }}
+                  onUploadError={(error: Error) => {
+                    toast.error(error.message);
+                  }}
+                />
               )}
             </CardContent>
           </Card>
