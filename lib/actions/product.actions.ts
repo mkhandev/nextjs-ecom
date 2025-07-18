@@ -1,7 +1,7 @@
 "use server";
 
 import { PAGE_SIZE } from "./../constants/index";
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 //import { convertToPlainObject } from "../utils";
 import { LATEST_PRODUCTS_LIMIT } from "../constants";
 import { convertToPlainObject, formatError } from "../utils";
@@ -34,17 +34,30 @@ export async function getProductBySlug(slug: string) {
 }
 
 export async function getAllProducts({
-  //query,
+  name,
   page,
   limit = PAGE_SIZE,
 }: //category,
 {
-  //query: string;
+  name: string;
   page: number;
   limit?: number;
   //category?: string;
 }) {
+  const queryFilter: Prisma.ProductWhereInput =
+    name && name !== "all"
+      ? {
+          name: {
+            contains: name,
+            mode: "insensitive",
+          } as Prisma.StringFilter,
+        }
+      : {};
+
   const data = await prisma.product.findMany({
+    where: {
+      ...queryFilter,
+    },
     orderBy: { createdAt: "desc" },
     take: limit,
     skip: (page - 1) * limit,
