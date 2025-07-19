@@ -34,31 +34,71 @@ export async function getProductBySlug(slug: string) {
 }
 
 export async function getAllProducts({
-  name,
+  query,
   page,
   limit = PAGE_SIZE,
-}: //category,
-{
-  name: string;
+  category,
+  price,
+  rating,
+  sort,
+}: {
+  query: string;
   page: number;
   limit?: number;
-  //category?: string;
+  category?: string;
+  price?: string;
+  rating?: string;
+  sort?: string;
 }) {
   const queryFilter: Prisma.ProductWhereInput =
-    name && name !== "all"
+    query && query !== "all"
       ? {
           name: {
-            contains: name,
+            contains: query,
             mode: "insensitive",
           } as Prisma.StringFilter,
+        }
+      : {};
+
+  // Category filter
+  const categoryFilter = category && category !== "all" ? { category } : {};
+
+  // Price filter
+  const priceFilter: Prisma.ProductWhereInput =
+    price && price !== "all"
+      ? {
+          price: {
+            gte: Number(price.split("-")[0]),
+            lte: Number(price.split("-")[1]),
+          },
+        }
+      : {};
+
+  // Rating filter
+  const ratingFilter =
+    rating && rating !== "all"
+      ? {
+          rating: {
+            gte: Number(rating),
+          },
         }
       : {};
 
   const data = await prisma.product.findMany({
     where: {
       ...queryFilter,
+      ...categoryFilter,
+      ...priceFilter,
+      ...ratingFilter,
     },
-    orderBy: { createdAt: "desc" },
+    orderBy:
+      sort === "lowest"
+        ? { price: "asc" }
+        : sort === "highest"
+        ? { price: "desc" }
+        : sort === "rating"
+        ? { rating: "desc" }
+        : { createdAt: "desc" },
     take: limit,
     skip: (page - 1) * limit,
   });
@@ -145,4 +185,31 @@ export async function getProductById(productId: string) {
   });
 
   return convertToPlainObject(data);
+}
+
+//get all product categories
+export async function getAllCategories() {
+  const data = await prisma.product.groupBy({
+    by: ["category"],
+    _count: true,
+  });
+
+  return data;
+}
+
+// Get featured products
+export async function getFeaturedProducts() {
+  const data = await prisma.product.findMany({
+    where: { isFeatured: true },
+    orderBy: { createdAt: "desc" },
+    take: 4,
+  });
+
+  return data.map((product) => ({
+    ...product,
+    price: product.price.toString(),
+    rating: product.rating.toString(),
+  }));
+
+  //return convertToPlainObject(data);
 }
