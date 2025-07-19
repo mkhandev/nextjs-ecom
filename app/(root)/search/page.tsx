@@ -64,7 +64,7 @@ const SearchPage = async (props: {
     c?: string;
     p?: string;
     s?: string;
-    r?: number;
+    r?: string;
     pg?: string;
   }) => {
     const params = { q, category, price, rating, sort, page };
@@ -159,7 +159,7 @@ const SearchPage = async (props: {
               <li key={r}>
                 <Link
                   className={`${rating === r.toString() && "font-bold"}`}
-                  href={getFilterUrl({ r })}
+                  href={getFilterUrl({ r: r.toString() })}
                 >
                   {`${r} stars & up`}
                 </Link>
