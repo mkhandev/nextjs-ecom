@@ -1,8 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReviewForm from "./review-form";
+import { getReviews } from "@/lib/actions/review.actions";
+import { Review } from "@/types";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Calendar, User } from "lucide-react";
+import { formatDateTime } from "@/lib/utils";
+import Rating from "@/components/shared/product/rating";
 
 const ReviewList = ({
   userId,
@@ -13,12 +25,22 @@ const ReviewList = ({
   productId: string;
   productSlug: string;
 }) => {
-  const [reviews, setReviews] = useState([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
 
   // Reload reviews after created or updated
   const reload = async () => {
-    setReviews([]);
+    const res = await getReviews({ productId });
+    setReviews([...res.data]);
   };
+
+  useEffect(() => {
+    const loadReviews = async () => {
+      const res = await getReviews({ productId });
+      setReviews(res.data);
+    };
+
+    loadReviews();
+  }, [productId]);
 
   return (
     <div className="space-y-4">
@@ -42,7 +64,33 @@ const ReviewList = ({
           to write a review
         </div>
       )}
-      <div className="flex flex-col gap-3">Review</div>
+
+      <div className="flex flex-col gap-3">
+        {reviews.map((review) => (
+          <Card key={review.id}>
+            <CardHeader>
+              <div className="flex-between">
+                <CardTitle>{review.title}</CardTitle>
+              </div>
+              <CardDescription>{review.description}</CardDescription>
+            </CardHeader>
+
+            <CardContent>
+              <div className="flex space-x-4 text-sm text-muted-foreground">
+                <Rating value={review.rating} />
+                <div className="flex items-center">
+                  <User className="w-3 h-3 mr-1" />
+                  {review.user ? review.user.name : "User"}
+                </div>
+                <div className="flex items-center">
+                  <Calendar className="w-3 h-3 mr-1" />
+                  {formatDateTime(review.createdAt).dateTime}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };

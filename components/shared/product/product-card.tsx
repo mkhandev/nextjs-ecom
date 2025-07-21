@@ -4,6 +4,7 @@ import Link from "next/link";
 import React from "react";
 import ProductPrice from "./product-price";
 import { Product } from "@/types";
+import Rating from "./rating";
 
 function ProductCard({ product }: { product: Product }) {
   return (
@@ -25,7 +26,7 @@ function ProductCard({ product }: { product: Product }) {
           <h2 className="text-sm font-medium">{product.name}</h2>
         </Link>
         <div className="gap-4 flex-between">
-          <p>{product.rating} stars</p>
+          <Rating value={Number(product.rating)} />
           {product.stock > 0 ? (
             <ProductPrice value={Number(product.price)} />
           ) : (
