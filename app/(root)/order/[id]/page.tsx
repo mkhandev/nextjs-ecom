@@ -5,6 +5,7 @@ import OrderDetailsTable from "./order-details-table";
 import { ShippingAddress } from "@/types";
 import { Decimal } from "@prisma/client/runtime/library";
 import { auth } from "@/auth";
+import Stripe from "stripe";
 
 export const metadata: Metadata = {
   title: "Order Details",
@@ -16,6 +17,21 @@ const OrderDetailsPage = async (props: { params: Promise<{ id: string }> }) => {
   if (!order) notFound();
 
   const session = await auth();
+
+  let client_secret = null;
+
+  if (order.paymentMethod === "Stripe" && !order.isPaid) {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+
+    // Create payment intent
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: Math.round(Number(order.totalPrice) * 100),
+      currency: "USD",
+      metadata: { orderId: order.id },
+    });
+
+    client_secret = paymentIntent.client_secret;
+  }
 
   function normalizeDecimal(value: unknown): string {
     if (typeof value === "string") return value;
@@ -39,6 +55,7 @@ const OrderDetailsPage = async (props: { params: Promise<{ id: string }> }) => {
           })),
           shippingAddress: order.shippingAddress as ShippingAddress,
         }}
+        stripeClientSecret={client_secret}
         isAdmin={session?.user?.role === "admin" || false}
       />
     </>
