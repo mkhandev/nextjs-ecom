@@ -6,10 +6,11 @@ import { auth } from "@/auth";
 import { getMyCart } from "./cart.actions";
 import { getUserById } from "./user.actions";
 import { insertOrderSchema } from "../validators";
-import { CartItem, PaymentResult } from "@/types";
+import { CartItem, PaymentResult, ShippingAddress } from "@/types";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { PAGE_SIZE } from "../constants";
 import { revalidatePath } from "next/cache";
+import { sendPurchaseReceipt } from "@/email";
 
 const prisma = new PrismaClient();
 
@@ -293,7 +294,6 @@ export async function updateOrderToPaid({
   });
 
   // Get updated order after transaction
-  /*
   const updatedOrder = await prisma.order.findFirst({
     where: { id: orderId },
     include: {
@@ -307,11 +307,21 @@ export async function updateOrderToPaid({
   sendPurchaseReceipt({
     order: {
       ...updatedOrder,
-      shippingAddress: updatedOrder.shippingAddress as ShippingAddress,
+
       paymentResult: updatedOrder.paymentResult as PaymentResult,
+      shippingAddress: updatedOrder.shippingAddress as ShippingAddress,
+
+      itemsPrice: updatedOrder.itemsPrice.toString(),
+      totalPrice: updatedOrder.totalPrice.toString(),
+      shippingPrice: updatedOrder.shippingPrice.toString(),
+      taxPrice: updatedOrder.taxPrice.toString(),
+
+      orderitems: updatedOrder.orderitems.map((item) => ({
+        ...item,
+        price: item.price.toString(),
+      })),
     },
   });
-  */
 }
 
 // Update COD order to paid
