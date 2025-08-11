@@ -2,7 +2,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, update .env file. Copy all variable from .env.local to .env file:
+First update .env file. Copy all variable from .env.local to .env file:
 
 ## Project Install
 
