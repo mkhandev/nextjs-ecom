@@ -8,7 +8,7 @@ import Rating from "./rating";
 
 function ProductCard({ product }: { product: Product }) {
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-sm py-0 pb-6 border-t-0 rounded-b-2xl">
       <CardHeader className="items-center p-0">
         <Link href={`/product/${product.slug}`}>
           <Image
@@ -17,6 +17,7 @@ function ProductCard({ product }: { product: Product }) {
             height={300}
             width={300}
             priority={true}
+            className="w-full rounded-t-2xl"
           />
         </Link>
       </CardHeader>
